@@ -1,38 +1,190 @@
-# Pupil
-Open source eye tracking software platform that started as a thesis project at MIT. Pupil is a project in active, community driven development. Pupil mobile eye tracking hardware is accessible, hackable, and affordable. The software is open source and written in `Python` and `C++` when speed is an issue.
++++ date = "2017-06-22T16:56:14+07:00" title = "windows" section_weight = 4 page_weight = 1.3 +++
 
-Our vision is to create tools for a diverse group of people interested in learning about eye tracking and conducting their eye tracking projects.
+Windows Dependencies
 
-Chat with us on [Discord](https://discord.gg/gKmmGqy).
+System Requirements
 
-## Project Website
-For an intro to the Pupil mobile eye tracking platform have a look at the [Pupil Labs Website](http://pupil-labs.com "Pupil Labs").
+We develop the Windows version of Pupil using 64 bit Windows 10.
 
-## Getting Started
-<table>
-<tr>
-	<td align="center" width="20%"><img width="100" src="https://github.com/pupil-labs/pupil/wiki/media/icons/Pupil_Logo_wiki-01.png" /></td>
-	<td  align="center" width="20%"><img width="100" src="https://github.com/pupil-labs/pupil/wiki/media/icons/Pupil_Logo_wiki-03.png" /></td>
-	<td align="center" width="20%"><img width="100" src="https://github.com/pupil-labs/pupil/wiki/media/icons/Pupil_Logo_wiki-04.png" /></td>
-	<td align="center" width="20%"><img width="100" src="https://github.com/pupil-labs/pupil/wiki/media/icons/Pupil_Logo_wiki-05.png" /></td>
-	<td align="center" width="20%"><img width="100" src="https://github.com/pupil-labs/pupil/wiki/media/icons/Pupil_Logo_wiki-02.png" /></td>
-</tr>
-<tr>
-	<td><a href="http://docs.pupil-labs.com/#pupil-hardware">Pupil Hardware</a></td>
-	<td><a href="http://docs.pupil-labs.com/#getting-started">Getting Started</a></td>
-	<td><a href="http://docs.pupil-labs.com/#user-docs">User Docs</a></td>
-	<td><a href="http://docs.pupil-labs.com/#developer-docs">Developer Docs</a></td>
-	<td><a href="http://docs.pupil-labs.com/#community">Community</a></td>
-</tr>
-<tr>
-	<td valign="top">Get and setup your Pupil eye tracking hardware</td>
-	<td valign="top">Get up and running and learn the basic Pupil workflow</td>
-	<td valign="top">Learn more about Pupil Capture and Pupil Player software settings and workflows here</td>
-	<td valign="top">Want to write code? Read the developer docs here</td>
-	<td valign="top">Connect with the Pupil community. Chat with us on <a href="https://discord.gg/gKmmGqy">Discord</a></td>		
-</tr>
-</table>
+Therefore we can only debug and support issues for Windows 10.
+
+Notes Before Starting
+?Work directory - We will make a directory called  work  at  C:\work  and will use this directory for all build processes and setup scripts. Whenever we refer to the  work  directory, it will refer to  C:\work . You can change this to whatever is convenient for you, but note that all instructions and setup files refer to  C:\work 
+?Command Prompt - We will always be using  x64 Native Tools Command Prompt for VS 2017 Preview  as our command prompt. Make sure to only use this command prompt. Unlike unix systems, windows has many possible "terminals" or "cmd prompts". We are targeting  x64  systems and require the  x64  command prompt. You can access this cmd prompt from the Visual Studio 2017 shortcut in your Start menu.
+?64bit - You should be using a 64 bit system and therefore all downloads, builds, and libraries should be for  x64  unless otherwise specified.
+?Windows paths and Python - path separators in windows are a forward slash  \ . In Python, this is a special "escape" character. When specifying Windows paths in a Python string you must use  \\  instead of  \  or use Python raw strings, e.g.  r'\' .
+?Help - For discussion or questions on Windows head over to our #pupil Discord channel. If you run into trouble please raise an issue on github!
+
+Install Visual Studio
+
+Download Visual Studio 2017 Preview version 15.3 from visualstudio.com
+?Run the Visual Studio bootstrapper  .exe .
+?Navigate to the  Workloads  tab
+?In the  Workloads  tab, choose  Desktop Development with C++ . This will install all runtimes and components we need for development. Here is a list of what you should see  checked  in the  Desktop development with C++  in the  Summary  view: ?VC++ 2017 v141 toolset (x86,x64)
+?C++ profiling tools
+?Windows 10 SDK (10.0.15063.0) for Desktop C++ x86 and x64
+?Visual C++ tools for CMAKE
+?Visual C++ ATL support
+?MFC and ATL support (x86, x64)
+?Standard Library Modules
+?VC++ 2015.3 v140 toolset for desktop (x86, x64)
+
+?Navigate to the  Individual Components  tab
+?In the  Individual Components  tab check  Git . This will install  git  on your system. In the Summary Panel for  Individual Components  you should see: ? Git for Windows 
+
+?Click  Install 
+Note - You can always re-run the Visual Studio bootstrapper to modify your Visual Studio installation. 
+Install 7-Zip
+
+Install 7-zip to extract files.
+
+Install Python
+?Download Python x64
+?Run the Python installer.
+?Check the box  Add Python to PATH . This will add Python to your System PATH Environment Variable.
+?Check the box  Install for all users . This will install Python to  C:\Program Files\Python36 .
+Note - some build scripts may fail to start Python due to spaces in the path name. So, you may want to consider installing Python to `C:\Python36`. 
+System Environment Variables
+
+You will need to check to see that Python was added to your system PATH variables. You will also need to manually add other entries to the system PATH later in the setup process.
+
+To access your System Environment Variables:
+?Right click on the Windows icon in the system tray.
+?Select  System .
+?Click on  Advanced system settings .
+?Click on  Environment Variables... .
+?You can click on  Path  in  System Variables  to view the variables that have been set.
+?You can  Edit  or  Add  new paths (this is needed later in the setup process).
+
+Python Wheels
+
+Most Python extensions can be installed via pip. We recommend to download and install the pre-built wheel (*.whl) packages maintained by Christoph Gohlke. (@Gohlke Thanks for creating and sharing these packages!)
+Note - you are using Python3.6 and a Windows 64 bit system. Therefore download wheels with `cp36?cp36m?win_amd64.whl` in the file name. `cp36` means C Python v3.6 and `amd64` signifies 64 bit architecture. 
+Download the most recent version of the following wheels Python3.6 x64 systems.
+?numpy
+?scipy
+?boost.python
+?cython
+?opencv
+?pyopengl (do not download pyopengl-accelerate)
+?psutil
+?pyaudio
+?pyzmq
+
+Open your command prompt and  Run as administrator  in the directory where the wheels are downloaded.
+?Install  numpy  and  scipy  before all other wheels.
+?Install all wheels with  pip install X  (where X is the name of the  .whl  file)
+?You can check that libs are installed with  python import X  statements in the command prompt where  X  is the name of the lib.
+
+Python Libs
+
+Open your command prompt and install the following libs: // 두 번째거부터 설치해야 첫 번째거 설치됨
+? pip install msgpack_python 
+? pip install win_inet_pton 
+? pip install git+https://github.com/zeromq/pyre.git 
+
+Pupil Labs Python Wheels
+
+Download the following Python wheels from Pupil Labs github repos.
+?pyglui
+?pyav
+?pyndsi
+?pyuvc
+
+ pyuvc  requires that you download Microsoft Visual C++ 2010 Redistributable from microsoft. The  pthreadVC2  lib, which is used by libuvc, depends on  msvcr100.dll .
+Note - if you're looking to build Pupil Labs Python libs from source, go here 
+Ceres for Windows
+
+Navigate to your work directory
+? git clone --recursive https://github.com/tbennun/ceres-windows.git 
+?Download Eigen 3.3.3
+?Unzip Eigen and rename the contained  eigen  directory to  Eigen 
+?Copy the  Eigen  directory into  ceres-windows 
+?Copy  C:\work\ceres-windows\ceres-solver\config\ceres\internal\config.h  to  C:\work\ceres-windows\ceres-solver\include\ceres\internal 
+?Open  ceres-2015.sln  and with Visual Studio 2017 Preview and agree to update to 2017.
+?Set configurations to  Release  and  x64 
+?Right click on  libglog_static  and  Build 
+?Right click on  ceres_static  and  Build 
+
+Boost
+
+Download and install the latest boost version for Windows x64 with version number matching your Visual Studio 2017 MSVC version.
+?For VS 2017 preview the MSVC version is 14.1
+?Download boost from sourceforge
+?Extract boost to work directory and name the boost dir  boost 
+?Open  C:\work\boost\boost\python\detail\config.hpp  with Visual Studio 2017 Preview
+?Change L108 from  define BOOST_LIB_NAME boost_python  to  define BOOST_LIB_NAME boost_python3 
+?Save the file and close Visual Studio
+
+The prebuilt boost.python depends on  python27.dll . The files from package boost.python are built with Visual Studio 2015. One solution to this issue is to build boost from source.
+?Open your command prompt
+?cd to  C:\work\boost 
+?Run  boostrap.bat . This will generate  b2.exe . // boostrap.bat > bootstrap.bat
+
+Change user config before compiling boost.
+?Copy  C:\work\boost\tools\build\example\user-config.jam  to  boost\tools\build\src\user-config.jam .
+?Uncomment and edit following lines in the  user-config.jam  file according your msvc and python version: ? using msvc : 14.1 ;  in section  MSVC configuration 
+? using python : 3.6 : C:\\Python36 : C:\\Python36\\include : C:\\Python36\\libs ;  in section  Python configuration 
 
 
-## License
-All source code written by Pupil Labs is open for use in compliance with the [GNU Lesser General Public License (LGPL v3.0)](http://www.gnu.org/licenses/lgpl-3.0.en.html). We want you to change and improve the code -- make a fork! Make sure to share your work with the community! See the docs for more info on the [license](http://docs.pupil-labs.com/#license "License"). For support and custom licencing [contact us!](https://github.com/pupil-labs/pupil/wiki/Community#email "email us")
+Build boost.python
+?Open your command prompt and navigate to your work dir
+?cd to  boost 
+? b2 --with-python link=shared address-model=64 
+?The generated DLL and Lib files are in  C:\work\boost\stage .
+
+Add Boost libs to your system path
+?Add  C:\work\boost\stage\lib  to your system PATH in your System Environment Variables
+
+Clone the Pupil Repo
+?Open a command prompt in your work dir
+? git clone https://github.com/pupil-labs/pupil.git 
+
+Setup pupil_external dependencies
+
+Dynamic libs are required to be stored in  pupil\pupil_external  so that you do not have to add further modifications to your system PATH.
+
+GLEW to pupil_external
+?Download GLEW Windows binaries from sourceforge
+?Unzip GLEW in your work dir
+?Copy  glew32.dll  to  pupil_external 
+
+GLFW to pupil_external
+?Download GLFW Windows binaries from glfw.org
+?Unzip GLFW to your work dir
+?Copy  glfw3.dll  from  lib-vc2015  to  pupil_external 
+
+FFMPEG to pupil_external
+?Download FFMPEG Windows shared binaries from ffmpeg
+?Unzip ffmpeg-shared to your work dir
+?Copy the following 8  .dll  files to  pupil_external  ? avcodec-57.dll 
+? avdevice-57.dll 
+? avfilter-6.dll 
+? avformat-57.dll 
+? avutil-55.dll 
+? postproc-54.dll 
+? swresample-2.dll 
+? swscale-4.dll 
+
+
+OpenCV to pupil_external
+?Download opencv 3.2 exe installer from sourceforge
+?Unzip OpenCV to your work dir and rename dir to  opencv 
+?Copy  opencv\build\x64\vc14\bin\opencv_world320.dll  to  pupil_external 
+
+Modify pupil_detectors setup.py
+?Open  pupil\pupil_src\capture\pupil_detectors\setup.py // C:\work\boost\pupil\pupil_src\shared_modules
+?Go to the  if platform.system() == 'Windows'  block
+?Check that paths for  opencv ,  Eigen ,  ceres-windows  and  boost  are correctly specified. The installed opencv lib is  opencv_world320.lib .
+?Edit paths if necessary
+?Edit  C:\\work\\boost\\stage\\lib  if necessary
+?Save and close setup.py
+When starting run_capture.bat, it will build module pupil_detectors. However, if you are debugging, you may want to try building explicitly. From within `pupil/pupil_src/capture/pupil_detectors` run `python setup.py build` to build the pupil_detectors. 
+Modify optimization_calibration setup.py
+?Open  pupil\pupil_src\shared_modules\calibration_routines\optimization_calibration\setup.py 
+?Go to the  if platform.system() == 'Windows'  block
+?Check that paths for  opencv ,  Eigen ,  ceres-windows  and  boost  are correctly specified. The installed opencv lib is  opencv_world320.lib .
+?Edit paths if necessary
+?Edit  C:\\work\\boost\\stage\\lib  if necessary
+?Save and close setup.py
+When starting run_capture.bat, it will build module pupil_detectors. However, if you are debugging, you may want to try building explicitly. From within `pupil/pupil_src/capture/pupil_detectors` run `python setup.py build` to build the pupil_detectors. 
